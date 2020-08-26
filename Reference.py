@@ -185,4 +185,11 @@ def map(list, f):
 map([1, 2, 3, 4], lambda x: x + 1) == [2, 3, 4, 5]
 map([1, 2, 3, 4], lambda x: x ** 2) == [1, 4, 9, 16]
 
-
+def myAnd(x, y):
+   if x == True:
+      if y == True:
+         return True
+      else:
+         return False
+   else:
+         return False
