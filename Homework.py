@@ -22,19 +22,21 @@ def numOfDigits(n): # количество цифр в числе
        return 1 + numOfDigits(n // 10)
 
 # n >= 0
-def sumOfDigits(n):
+def sumOfDigits(n): # сумма цифр в числе
     if n // 10 == 0:
        return n
     else:
-       return sumOfDigits(n // 10) + n % 10
+       return n % 10 + sumOfDigits(n // 10)
 
 # n >= 0
-def maxDigit(n): # используй рекурсию
-    pass         # Homework
+def maxDigit(n): # максимальная цифра в числе
+    pass         # используй рекурсию
+                 # Homework
 
 # 0 <= d <= 9, ds >= 0
 def join(d, ds): # добавить цифру `d` к числу `ds` спереди
-    pass         # Homework
+    pass         # используй рекурсию
+                 # Homework
 
 # n >= 0
 def reverse(n):  # перевернуть число, используй рекурсию
