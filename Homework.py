@@ -35,8 +35,11 @@ def maxDigit(n): # максимальная цифра в числе
 
 # 0 <= d <= 9, ds >= 0
 def join(d, ds): # добавить цифру `d` к числу `ds` спереди
-    pass         # используй рекурсию
-                 # Homework
+    if ds // 10 == 0:
+       return 10 * d + ds
+    else:
+       r = join(d, ds // 10)
+       return 10 * r + ds % 10
 
 # n >= 0
 def reverse(n):  # перевернуть число, используй рекурсию
