@@ -30,21 +30,30 @@ def sumOfDigits(n): # сумма цифр в числе
 
 # n >= 0
 def maxDigit(n): # максимальная цифра в числе
-    pass         # используй рекурсию
-                 # Homework
+    if n // 10 == 0:
+       return n
+    else:
+       m = maxDigit(n // 10)
+       if m > n % 10:
+          return m
+       else:
+          return n % 10
 
-# 0 <= d <= 9, ds >= 0
-def join(d, ds): # добавить цифру `d` к числу `ds` спереди
+# d >= 0, ds >= 0
+def join(d, ds): # добавить число `d` к числу `ds` спереди
     if ds // 10 == 0:
        return 10 * d + ds
     else:
        r = join(d, ds // 10)
        return 10 * r + ds % 10
 
-# n >= 0
-def reverse(n):  # перевернуть число, используй рекурсию
-    pass         # используй вспомогательную функцию `join`
-                 # Homework
+def reverse(n):  # перевернуть число
+    if n // 10 == 0:
+       return n
+    else:
+       r = reverse(n // 10)
+       dif = numOfDigits(n // 10) - numOfDigits(r)
+       return join(n % 10 * 10 ** dif, r)
 
 # n >= 0, rn = reverse(n)
 def isPalindromeHelper(n, rn): # вспомогательная функция
@@ -82,6 +91,9 @@ checkEqual("join2", join(1, 2), 12)
 checkEqual("join3", join(1, 234), 1234)
 checkEqual("join4", join(0, 2345), 2345)
 checkEqual("join5", join(3, 180), 3180)
+
+checkEqual("join6", join(32, 180), 32180)
+checkEqual("join7", join(120, 3450), 1203450)
 
 checkEqual("reverse1", reverse(123), 321)
 checkEqual("reverse2", reverse(20), 2)
