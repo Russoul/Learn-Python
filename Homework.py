@@ -64,6 +64,61 @@ def isPalindromeHelper(n, rn): # вспомогательная функция
 def isPalindrome(n): # является ли `n` палиндромом
     return isPalindromeHelper(n, reverse(n))
 
+# n is Integer, k is Integer
+def max(n, k):
+    pass # Homework
+
+# n is Integer, k is Integer
+def min(n, k):
+    pass # Homework
+
+def sgn(n): # "знак" числа (или 0)
+    if n > 0:
+       return 1
+    elif n < 0:
+       return -1
+    else:
+       return 0
+
+def abs(n): # модуль числа
+    if n >= 0:
+       return n
+    else:
+       return -n
+
+# n > 0, k > 0, n = max(n, k), k = min(n, k)
+def gcdHelper(n, k): # используй рекурсию
+    return 1         # Homework
+
+# n =/= 0, k =/= 0
+def gcd(n, k): # наибольший общий делитель
+    return sgn(n * k) * gcdHelper(max(abs(n), abs(k)), min(abs(n), abs(k)))
+
+# n =/= 0, k =/= 0
+def lcm(n, k):    # наименьшее общее кратное
+    g = gcd(n, k) # Homework
+    pass
+
+# b > 0, d > 0, a >= 0, c >= 0
+def sumRat(a, b, c, d): # Найти a/b + c/d
+    pass                # возвратить отдельно числетиль
+                        # и знаменатель результата
+                        # результат должен быть в
+                        # сокращенном виде
+                        # Homework
+
+def sqrtHelper(n, k):   # Homework
+    pass                # используй рекурсию
+
+# n >= 0
+def sqrt(n): # найти целый квадратный корень натурального числа
+             # если такой есть
+    return sqrtHelper(n, 0)
+
+# a =/= 0
+def solveQuadEq(a, b, c): # Решить a * x ** 2 + b * x + c = 0
+    pass                  # в случае если есть целые корни
+
 # -------------- ТЕСТЫ -----------------
 
 def checkEqual(str, a, b): # проверка правильности функций
@@ -109,3 +164,36 @@ checkEqual("isPalindrome5", isPalindrome(123321), True)
 checkEqual("isPalindrome6", isPalindrome(2001010101002), True)
 checkEqual("isPalindrome7", isPalindrome(201010101002), False)
 checkEqual("isPalindrome8", isPalindrome(200110101002), False)
+
+checkEqual("gcd1", gcd(100, 10), 10)
+checkEqual("gcd2", gcd(99, 11), 11)
+checkEqual("gcd3", gcd(45, 25), 5)
+checkEqual("gcd4", gcd(3, 11), 1)
+checkEqual("gcd5", gcd(30, 42), 6)
+
+checkEqual("gcd6", gcd(-30, 42), -6)
+checkEqual("gcd7", gcd(-30, -42), 6)
+
+checkEqual("lcm1", lcm(5, 3), 15)
+checkEqual("lcm2", lcm(3 * 5, 5 * 7), 3 * 5 * 7)
+checkEqual("lcm3", lcm(2 * 3 * 5, 2 * 3 * 7), 2 * 3 * 5 * 7)
+checkEqual("lcm4", lcm(2 ** 10, 2 ** 9), 2 ** 10)
+
+checkEqual("lcm5", lcm(-2, 3), -6)
+
+checkEqual("sumRat1", sumRat(1, 4, 7, 8), (9, 8)) # 1/4 + 7/8 = 9/8
+checkEqual("sumRat2", sumRat(2, 4, 4, 12), (5, 6)) # 2/4 + 4/12 = 5/6
+checkEqual("sumRat3", sumRat(1, 1, 1, 1), (2, 1)) # 1/1 + 1/1 = 2/1
+checkEqual("sumRat4", sumRat(0, 99, 4, 7), (4, 7)) # 0/99 + 4/7 = 4/7
+
+checkEqual("sqrt1", sqrt(9), (True, 3))
+checkEqual("sqrt2", sqrt(900 ** 2), (True, 900))
+checkEqual("sqrt3", sqrt(1), (True, 1))
+checkEqual("sqrt4", sqrt(0), (True, 0))
+checkEqual("sqrt5", sqrt(8), (False, ()))
+
+checkEqual("solveQuadEq", solveQuadEq(1, 2, 1), (True, (1, -1), (1, -1)))
+checkEqual("solveQuadEq", solveQuadEq(1, 1, -6), (True, (3, -1), (2, 1)))
+checkEqual("solveQuadEq", solveQuadEq(3, 3, -18), (True, (3, -1), (2, 1)))
+checkEqual("solveQuadEq", solveQuadEq(1, 1, 1), (False, ()))
+checkEqual("solveQuadEq", solveQuadEq(1, -1, 0), (False, ()))
