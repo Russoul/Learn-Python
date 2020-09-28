@@ -1,16 +1,13 @@
 from __future__ import annotations
 from typing import *
-A = TypeVar('A')
+from Homework import *
 
 class Nil:
-    def __rmul__(self : Nil, other : A) -> List:
-        return List(other, self)
-
-    def __rpow__(self : Nil, other : A) -> List:
+    def __rpow__(self, other):
         return List(other, self)
 
     def __eq__(self, other):
-        return type(other) == Nil or other == [] or other == ()
+        return type(other) == Nil
 
 nil = Nil()
 
@@ -25,22 +22,18 @@ def showListHelper(list):
 def showList(list):
     return "{" + showListHelper(list) + "}"
 
-
 class List:
-    def __init__(self : List, x : A, xs : List):
+    def __init__(self, x, xs):
         self.head = x
         self.tail = xs
 
-    def __eq__(self : List, other : List) -> bool:
-        pass
-
-    def __rpow__(self : List, other : A) -> List:
+    def __rpow__(self, other):
         return List(other, self)
 
-    def __str__(self : List) -> str:
+    def __str__(self):
         return showList(self)
 
-    def __eq__(self : List, other : List):
+    def __eq__(self, other):
         return type(other) == List and self.head == other.head and self.tail == other.tail
 
 def isEmpty(l):
@@ -48,6 +41,16 @@ def isEmpty(l):
 
 def nonEmpty(l):
     return not isEmpty(l)
+
+def map(f, l): # {x1, x2, x3, ..., xn} -> {f(x1), f(x2), f(x3), ..., f(xn)}
+    if isEmpty(l):
+       return nil
+    else:
+       fx1 = f(l.head)
+       t = map(f, l.tail) # f(x1) ** {f(x2), f(x3), ..., f(xn)}
+       return fx1 ** t
+
+
 
 l = 1 ** 2 ** 3 ** nil
 r = 0 ** 2 ** 3 ** nil
@@ -59,3 +62,14 @@ print(isEmpty([]))
 print(isEmpty(()))
 print(isEmpty(nil))
 print(nonEmpty(1 ** nil))
+
+t = 1 ** 2 ** 3 ** nil
+print(t, ":", map(lambda x: (x + 1) ** 2, t))
+
+print("-- ПРОВЕРКА НА ПАЛИНДРОМНОСТЬ --")
+
+def checkPalindromes(l):
+    map(lambda x: print(str(x) + ":" + str(isPalindrome(x))), l)
+
+
+checkPalindromes(111 ** 1 ** 123321 ** 123 ** 12000021 ** nil)
