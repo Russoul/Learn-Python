@@ -1,4 +1,6 @@
 import sys
+from math import floor
+import math
 from Lists import *
 
 # --------- Booleans and Numbers ----------
@@ -121,35 +123,73 @@ def solveQuadEq(a, b, c): # Решить a * x ** 2 + b * x + c = 0
 # -------- Lists ---------
 
 def length(xs): # посчитать длину списка
-    pass
+    if xs == nil:
+       return 0
+    else:
+       return 1 + length(xs.tail)
 
 def fromTo(min, max): # составить список из целых чисел
-                      # от min (включительно) до max (исключая)
-    pass              # min, min + 1, min + 2, ... max - 1
+    if min == max:    # от min (включительно) до max (исключая)
+       return nil     # min, min + 1, min + 2, ... max - 1
+    else:
+       return min ** fromTo(min + 1, max)
 
 def concat(xs, ys):   # сцепить два списка
-    pass              # concat(1 ** 2 ** nil, 3 ** 4 ** nil) = 1 ** 2 ** 3 ** 4 ** nil
+    if xs == nil:     # concat(1 ** 2 ** nil, 3 ** 4 ** nil) = 1 ** 2 ** 3 ** 4 ** nil
+       return ys
+    else:
+       return xs.head ** concat(xs.tail, ys)
 
 def filter(f, xs):    # составить новый список, в котором находятся все элементы x списка
-    pass              # xs, такие что f(x) = True
-                      # иными словами отфильтровать список xs через функцию f
+    if xs == nil:     # xs, такие что f(x) = True
+       return nil     # иными словами отфильтровать список xs через функцию f
+    else:
+       if f(xs.head):
+          return xs.head ** filter(f, xs.tail)
+       else:
+          return filter(f, xs.tail)
 
-def forAll(f, xs) -> Bool:
+def forAll(f, xs) -> bool:
     pass              # для всех ли элементов x списка xs выполняется
                       # f(x) = True ?
 
-def forSome(f, xs) -> Bool:
+def forSome(f, xs) -> bool:
     pass              # Есть ли хотябы один элемент x списка xs
                       # такой что f(x) = True ?
 
-def rev(xs):          # перевернуть список
+def rev(xs) -> List:  # перевернуть список
     pass              # rev(True ** 22 ** "ok" ** nil) = "ok" ** 22 ** True ** nil
 
-def span(f, xs):      # Позже
+def span(f, xs) -> (List, List): # Разделить список xs на пару списков
+    pass                         # Так что в первом списке пары находятся
+                                 # все первые элементы x списка xs такие что
+                                 # f(x) = True
+                                 # а во втором все элементы после первого x
+                                 # такого что f(x) = False
+                                 # включая его самого
+                                 # Пример: span(lambda x: x % 2 == 0, 2 ** 4 ** 1 ** 6 ** 8 ** 10 ** nil)
+                                 #           == (2 ** 4 ** nil, 1 ** 6 ** 8 ** 10 ** nil)
+
+def split(f, xs) -> (List, List):  # Разделить список xs на пару списков,
+    if xs == nil:                  # так что в первом из них хранятся элементы x из xs
+       return (nil, nil)           # для которых f(x) = True,
+    else:                          # а во втором элементы x для которых f(x) = False
+       (left, right) = split(f, xs.tail)
+       if f(xs.head):
+          return (xs.head ** left, right)
+       else:
+          return (left, xs.head ** right)
+
+def elemOf(x, xs) -> bool:    # является ли x элементом xs
     pass
 
-def split(f, xs):     # Позже
+def dedupHelper(unique, xs) -> List:
     pass
+
+def dedup(xs) -> List:              # убрать все повторяющиеся элементы
+    return dedupHelper(nil, xs)     # xs, при этом сохранив последовательность элементов
+                                    # пример: dedup(1 ** 3 ** 1 ** 3 ** 2 ** 1 ** nil)
+                                    #           == 1 ** 3 ** 2 ** nil
 
 def find(f, xs):      # Позже
     pass
@@ -164,6 +204,8 @@ def checkEqual(str, a, b): # проверка правильности функ�
        print(str + ": " + f"{a} != {b}", file = sys.stderr)
 
 def test():
+    print("<имя> : <получено> != <ожидалось>")
+    sys.stdout.flush() # make sure the above line is printed before any test failure
     checkEqual("xor00", xor(0, 0), 0)
     checkEqual("xor10", xor(1, 0), 1)
     checkEqual("xor01", xor(0, 1), 1)
@@ -238,5 +280,17 @@ def test():
     checkEqual("solveQuadEq", solveQuadEq(1, -1, 0), (False, ()))
 
     checkEqual("concat", concat(1 ** 2 ** nil, "1" ** "2" ** nil), 1 ** 2 ** "1" ** "2" ** nil)
+    checkEqual("length", length(1 ** 3 ** 5 ** nil), 3)
+    checkEqual("fromTo", fromTo(1, 10), 1 ** 2 ** 3 ** 4 ** 5 ** 6 ** 7 ** 8 ** 9 ** nil)
+    checkEqual("fromTo", fromTo(1000, 1000), nil)
+    checkEqual("filter", filter( lambda x: floor(math.sqrt(x)) * floor(math.sqrt(x)) == x
+                               , 1 ** 3 ** 4 ** 9 ** 10 ** nil), 1 ** 4 ** 9 ** nil)
+    checkEqual("split", split( lambda x: x % 2 != 0
+                             , 1 ** 2 ** 3 ** 4 ** 5 ** nil), (1 ** 3 ** 5 ** nil, 2 ** 4 ** nil))
+    checkEqual("elemOf", elemOf(0, 1 ** 2 ** 3 ** 4 ** 5 ** nil), False)
+    checkEqual("elemOf", elemOf(4, 1 ** 2 ** 3 ** 4 ** 5 ** nil), True)
+    checkEqual("rev", rev(1 ** 2 ** 3 ** 4 ** 5 ** nil), 5 ** 4 ** 3 ** 2 ** 1 ** nil)
+    checkEqual("dedup", dedup(1 ** 1 ** 1 ** 1 ** nil), 1 ** nil)
+    checkEqual("dedup", dedup(1 ** 2 ** 1 ** 3 ** 2 ** 8 ** 1 ** nil), 1 ** 2 ** 3 ** 8 ** nil)
 
 test()

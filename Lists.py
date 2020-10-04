@@ -8,6 +8,9 @@ class Nil:
     def __eq__(self, other):
         return type(other) == Nil
 
+    def __str__(self):
+        return "nil"
+
 nil = Nil()
 
 def showListHelper(list):
