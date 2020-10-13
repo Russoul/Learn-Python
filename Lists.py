@@ -9,7 +9,7 @@ class Nil:
         return type(other) == Nil
 
     def __str__(self):
-        return "nil"
+        return "{}"
 
 nil = Nil()
 
