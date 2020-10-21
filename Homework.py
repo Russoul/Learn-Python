@@ -209,44 +209,56 @@ def dedup(xs) -> List:              # убрать все повторяющие
                                     #           == 1 ** 3 ** 2 ** nil
 
 def find(f, xs):                    # Найти элелемент x в списке xs
-    pass                            # такой что f(x) = True,
-                                    # если такой имеется вернуть его в виде just(x)
-                                    # (если таких несколько вернуть первый из них),
-                                    # если таковых нет - вернуть nothing
+    if xs == nil:                   # такой что f(x) = True,
+       return nothing               # если такой имеется вернуть его в виде just(x)
+    else:                           # (если таких несколько вернуть первый из них),
+       if f(xs.head):               # если таковых нет - вернуть nothing
+          return just(xs.head)
+       else:
+          return find(f, xs.tail)
 
 def lookup(n, xs):                  # Имея список xs состоящий из пар значений,
-    pass                            # найти такую пару (x, y) в нем, что
-                                    # x == n.
-                                    # Если такая есть вернуть just(y)
-                                    # Иначе - вернуть nothing
+    if xs == nil:                   # найти такую пару (x, y) в нем, что
+       return nothing               # x == n.
+    else:                           # Если такая есть вернуть just(y)
+       (a, b) = n                   # Иначе - вернуть nothing
+       if a == xs.head:
+          return just(b)
+       else:
+          return lookup(n, xs.tail)
 
 # Будем говорить, что список xs является множеством или представляет
 # собой множество, если в нем нет повторяющихся элементов
 
 def isSet(xs):                      # Является ли xs множеством (проверить нет ли в xs дубликатов)
-    pass
+    return length(xs) == length(dedup(xs))
 
 def union(xs, ys):                  # Вернуть список, который представляет собой множество,
-    pass                            # полученное в результате операции объединения множеств
+    return dedup(concat(xs, ys))    # полученное в результате операции объединения множеств
                                     # xs и ys
 
-def intersection(xs, ys):           # Вернуть список, который представляет собой множество,
-    pass                            # полученное в результате операции пересечения множеств
-                                    # xs и ys
+def intersection(xs, ys):                            # Вернуть список, который представляет собой множество,
+    return filter(lambda x: elemOf(x, ys), xs)       # полученное в результате операции пересечения множеств
+                                                     # xs и ys
 
-def symmetricDifference(xs, ys):    # Вернуть список, который представляет собой множество,
-    pass                            # полученное в результате операции симметрической разности множеств
-                                    # xs и ys
+def symmetricDifference(xs, ys):
+    return filter(lambda u: not elemOf(u, xs) \
+                         or not elemOf(u, ys),    # Вернуть список, который представляет собой множество,
+                  union(xs, ys))                  # полученное в результате операции симметрической разности множеств
+                                                  # xs и ys
 
-def difference(xs, ys):             # Вернуть список, который представляет собой множество,
-    pass                            # полученное в результате операции разности множеств
-                                    # xs и ys
+# Вернуть список, который представляет собой множество,
+# полученное в результате операции разности множеств
+# xs и ys
+def difference(xs, ys):
+    return filter(lambda x: not elemOf(x, ys), xs)
 
 def isSubset(xs, ys):               # Является ли xs подмножеством ys
-    pass
+    return forAll(lambda x: elemOf(x, ys), xs)
 
 def equalSets(xs, ys):              # Являются ли два множества равными
-    pass                            # (Проверить, что xs явл подмножеством ys и ys явл подмножеством xs)
+    return isSubset(xs, ys) and \
+           isSubset(ys, xs)         # (Проверить, что xs явл подмножеством ys и ys явл подмножеством xs)
 
 # -------------- ТЕСТЫ -----------------
 
@@ -346,5 +358,17 @@ def test():
     checkEqual("rev", rev(1 ** 2 ** 3 ** 4 ** 5 ** nil), 5 ** 4 ** 3 ** 2 ** 1 ** nil)
     checkEqual("dedup", dedup(1 ** 1 ** 1 ** 1 ** nil), 1 ** nil)
     checkEqual("dedup", dedup(1 ** 2 ** 1 ** 3 ** 2 ** 8 ** 1 ** nil), 1 ** 2 ** 3 ** 8 ** nil)
+
+    checkEqual("intersection", intersection(1 ** 2 ** 5 ** 4 ** 8 ** nil, 2 ** 8 ** 1 ** nil), 1 ** 2 ** 8 ** nil)
+    checkEqual("intersection", intersection(1 ** 2 ** 5 ** 4 ** 8 ** nil, 7 ** 3 ** 10 ** nil), nil)
+    checkEqual("union", union(1 ** 2 ** 5 ** 4 ** 8 ** nil, 7 ** 5 ** 10 ** nil), 1 ** 2 ** 5 ** 4 ** 8 ** 7 ** 10 ** nil)
+    checkEqual("isSet", isSet(1 ** 2 ** 5 ** 4 ** 8 ** nil), True)
+    checkEqual("isSet", isSet(1 ** 2 ** 2 ** 4 ** 8 ** nil), False)
+    checkEqual("isSubset", isSubset(1 ** 2 ** 8 ** nil, 1 ** 7 ** 2 ** 8 ** nil), True)
+    checkEqual("isSubset", isSubset(1 ** 2 ** 8 ** 3 ** nil, 1 ** 7 ** 2 ** 8 ** nil), False)
+    checkEqual("difference", difference(1 ** 2 ** 8 ** 3 ** nil, 1 ** 7 ** 2 ** 8 ** nil), 3 ** nil)
+    checkEqual("symmetricDifference", symmetricDifference(1 ** 2 ** 8 ** 3 ** nil, 1 ** 7 ** 2 ** 8 ** nil), 3 ** 7 ** nil)
+    checkEqual("equalSets", equalSets(1 ** 2 ** 8 ** 3 ** nil, 2 ** 8 ** 1 ** 3 ** nil), True)
+    checkEqual("equalSets", equalSets(1 ** 2 ** 8 ** 3 ** nil, 2 ** 8 ** 4 ** 3 ** nil), False)
 
 test()

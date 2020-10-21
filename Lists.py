@@ -5,6 +5,9 @@ class Nil:
     def __rpow__(self, other):
         return List(other, self)
 
+    def __radd__(self, other):
+        return List(other, self)
+
     def __eq__(self, other):
         return type(other) == Nil
 
@@ -24,10 +27,14 @@ def showListHelper(list):
 def showList(list):
     return "{" + showListHelper(list) + "}"
 
+
 class List:
     def __init__(self, x, xs):
         self.head = x
         self.tail = xs
+
+    def __radd__(self, other):
+        return List(other, self)
 
     def __rpow__(self, other):
         return List(other, self)
@@ -37,6 +44,9 @@ class List:
 
     def __eq__(self, other):
         return type(other) == List and self.head == other.head and self.tail == other.tail
+
+print(1 ** 2 ** 3 ** 4 ** nil)
+print((1 + (2 + (3 + (4 + nil)))))
 
 def isEmpty(l):
     return nil == l
