@@ -253,12 +253,12 @@ def symmetricDifference(xs, ys):
 def difference(xs, ys):
     return filter(lambda x: not elemOf(x, ys), xs)
 
-def isSubset(xs, ys):               # Является ли xs подмножеством ys
+def subsetOf(xs, ys):               # Является ли xs подмножеством ys
     return forAll(lambda x: elemOf(x, ys), xs)
 
 def equalSets(xs, ys):              # Являются ли два множества равными
-    return isSubset(xs, ys) and \
-           isSubset(ys, xs)         # (Проверить, что xs явл подмножеством ys и ys явл подмножеством xs)
+    return subsetOf(xs, ys) and \
+           subsetOf(ys, xs)         # (Проверить, что xs явл подмножеством ys и ys явл подмножеством xs)
 
 # -------------- ТЕСТЫ -----------------
 
@@ -364,8 +364,8 @@ def test():
     checkEqual("union", union(1 ** 2 ** 5 ** 4 ** 8 ** nil, 7 ** 5 ** 10 ** nil), 1 ** 2 ** 5 ** 4 ** 8 ** 7 ** 10 ** nil)
     checkEqual("isSet", isSet(1 ** 2 ** 5 ** 4 ** 8 ** nil), True)
     checkEqual("isSet", isSet(1 ** 2 ** 2 ** 4 ** 8 ** nil), False)
-    checkEqual("isSubset", isSubset(1 ** 2 ** 8 ** nil, 1 ** 7 ** 2 ** 8 ** nil), True)
-    checkEqual("isSubset", isSubset(1 ** 2 ** 8 ** 3 ** nil, 1 ** 7 ** 2 ** 8 ** nil), False)
+    checkEqual("subsetOf", subsetOf(1 ** 2 ** 8 ** nil, 1 ** 7 ** 2 ** 8 ** nil), True)
+    checkEqual("subsetOf", subsetOf(1 ** 2 ** 8 ** 3 ** nil, 1 ** 7 ** 2 ** 8 ** nil), False)
     checkEqual("difference", difference(1 ** 2 ** 8 ** 3 ** nil, 1 ** 7 ** 2 ** 8 ** nil), 3 ** nil)
     checkEqual("symmetricDifference", symmetricDifference(1 ** 2 ** 8 ** 3 ** nil, 1 ** 7 ** 2 ** 8 ** nil), 3 ** 7 ** nil)
     checkEqual("equalSets", equalSets(1 ** 2 ** 8 ** 3 ** nil, 2 ** 8 ** 1 ** 3 ** nil), True)
