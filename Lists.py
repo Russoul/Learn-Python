@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import *
+from Maybe import *
 
 class Nil:
     def __rpow__(self, other):
@@ -14,6 +15,10 @@ class Nil:
     def __str__(self):
         return "{}"
 
+    def __getitem__(self, i):
+        return nothing
+
+
 nil = Nil()
 
 def showListHelper(list):
@@ -26,6 +31,17 @@ def showListHelper(list):
 
 def showList(list):
     return "{" + showListHelper(list) + "}"
+
+# Вернуть just(x), если x - элемент списка xs под номером i, считая от нуля.
+# Иначе вернуть nothing
+def index(i, xs):
+    if xs == nil:
+       return nothing
+    else:
+       if i == 0:
+          return just(xs.head)
+       else:
+          return index(i - 1, xs.tail)
 
 
 class List:
@@ -45,8 +61,8 @@ class List:
     def __eq__(self, other):
         return type(other) == List and self.head == other.head and self.tail == other.tail
 
-print(1 ** 2 ** 3 ** 4 ** nil)
-print((1 + (2 + (3 + (4 + nil)))))
+    def __getitem__(self, i):
+        return index(i, self)
 
 def isEmpty(l):
     return nil == l

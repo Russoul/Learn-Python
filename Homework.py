@@ -260,57 +260,111 @@ def equalSets(xs, ys):              # Являются ли два множес�
     return subsetOf(xs, ys) and \
            subsetOf(ys, xs)         # (Проверить, что xs явл подмножеством ys и ys явл подмножеством xs)
 
-# Вернуть just(x), если x - элемент списка xs под номером i, считая от нуля.
-# Иначе вернуть nothing
-def index(i, xs):
-    pass
-
 # MyBool
 
 # написать класс представляющий собой булево значение True
 # (написать __init__, __str__, __eq__)
 class MyTrue:
-    pass
+    def __init__(self):
+        pass
+    def __str__(self):
+        return "MyTrue"
+    def __eq__(self, other):
+        return type(other) == MyTrue
 
 # написать класс представляющий собой булево значение False
 # (написать __init__, __str__, __eq__)
 class MyFalse:
-    pass
+    def __init__(self):
+        pass
+    def __str__(self):
+        return "MyFalse"
+    def __eq__(self, other):
+        return type(other) == MyFalse
 
 # Написать функцию которая сопоставляет всроенные булевы значения True/False
 # с MyTrue/MyFalse
 def fromBool(b):
-    pass
+    if b:
+       return MyTrue
+    else:
+       return MyFalse
 
 # И наоборот
 def toBool(myb):
-    pass
+    if myb == MyTrue:
+       return True
+    else:
+       return False
 
 # Создать класс представляющий собой двумерный вектор
 # (написать __init__, __str__, __eq__)
 class Vec2:
-    pass
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return f"Vec2({self.x}, {self.y})"
+
+    def __eq__(self, other):
+        return type(other) == Vec2 \
+           and self.x == other.x   \
+           and self.y == other.y
 
 # Сложить два вектора
 def add(a, b):
-    pass
+    return Vec2(a.x + b.x, a.y + b.y)
 
 # Умножить вектор v на число k
 def mult(v, k):
-    pass
+    return Vec2(v.x * k, v.y * k)
 
 # Создать список из двух элементов вектора v
 def toList(v):
-    pass
+    return v.x ** v.y ** nil
 
 # Если xs имеет длину 2, вернуть вектор из его элементов обернутый в just
 # Иначе вернуть nothing
 def fromList(xs):
-    pass
+    if length(xs) == 2:
+       return just(Vec2(xs[0], xs[1]))
+    else:
+       return nothing
+
+# Добавить x в отсортированный список xs,
+# таким образом, что результат тоже был отсортированным списком.
+# Порядок задается бинарной функцией f.
+def insertByOrder1(f, xs, x):
+    if xs == nil:
+       return x ** nil
+    else:
+       u = xs.head
+       if f(u, x):
+          return u ** insertByOrder1(f, xs.tail, x)
+       else:
+          return x ** xs
+
+# Двухстрочный вариант через функцию span
+def insertByOrder2(f, xs, x):
+    (left, right) = span(lambda u: f(u, x), xs)
+    return concat(left, x ** right)
+
+# Вспомогательная функция
+def sortHelper(f, xs, sorted):
+   if xs == nil:
+      return sorted
+   else:
+      newSorted = insertByOrder1(f, sorted, xs.head)
+      return sortHelper(f, xs.tail, newSorted)
+
+# Insertion sort algorithm
+def sort(f, xs):
+   return sortHelper(f, xs, nil)
 
 # -------------- ТЕСТЫ -----------------
 
-def checkEqual(str, a, b): # проверка правильности функций
+def checkEqual(str, a, b): # проверка корректности функций
     if a != b:             # печатает ошибку если значения `a` и `b` не равны
        print(str + ": " + f"{a} != {b}", file = sys.stderr)
 
