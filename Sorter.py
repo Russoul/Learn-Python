@@ -39,7 +39,7 @@ def isLessThanStr(a, b):
 # print("bbbbbgt" < "bbbbbgt")
 # print(isLessThanStr("bbbbbgt", "bbbbbgt"))
 
-print(sort(isLessThanStr,
+print(insertionSort(isLessThanStr,
            'masha'
         ** 'peter4'
         ** 'peter3'

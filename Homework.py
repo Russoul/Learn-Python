@@ -66,11 +66,17 @@ def isPalindrome(n): # является ли `n` палиндромом
 
 # n, k - целые числа
 def max(n, k):
-    pass # Homework
+  if n >= k:
+    return n
+  else:
+    return k
 
 # n, k - целые числа
 def min(n, k):
-    pass # Homework
+  if k <= n:
+    return k
+  else:
+    return n
 
 def sgn(n): # "знак" числа (или 0)
     if n > 0:
@@ -312,6 +318,10 @@ class Vec2:
            and self.x == other.x   \
            and self.y == other.y
 
+    # self < other <=> длина(self) < длина(other) (сравнивать вектора по их евклидовой длине)
+    def __lt__(self, other):
+        pass # Homework
+
 # Сложить два вектора
 def add(a, b):
     return Vec2(a.x + b.x, a.y + b.y)
@@ -351,16 +361,30 @@ def insertByOrder2(f, xs, x):
     return concat(left, x ** right)
 
 # Вспомогательная функция
-def sortHelper(f, xs, sorted):
+def insertionSortHelper(f, xs, sorted):
    if xs == nil:
       return sorted
    else:
       newSorted = insertByOrder1(f, sorted, xs.head)
-      return sortHelper(f, xs.tail, newSorted)
+      return insertionSortHelper(f, xs.tail, newSorted)
 
 # Insertion sort algorithm
-def sort(f, xs):
-   return sortHelper(f, xs, nil)
+def insertionSort(f, xs):
+  return insertionSortHelper(f, xs, nil)
+
+# Еще один стандарный алгоритм сортировки списка
+def quicksort(f, xs):
+  if xs == nil:
+    return nil
+  else:
+    # составить список всех элементов `x` хвоста `xs` для которых выполняется f(x, xs.head)
+    # составить список всех элементов `x` хвоста `xs` для которых выполняется not f(x, xs.head)
+    # отсортировать оба списка рекурсивно
+    # вернуть их конкатенацию вставляя в нее `xs.head` в нужное место
+    # Homework
+    pass
+
+print(quicksort(lambda x, y: x < y, 1 ** 7 ** 5 ** 1 ** 2 ** 4 ** 9 ** 6 ** nil))
 
 # -------------- ТЕСТЫ -----------------
 
@@ -369,7 +393,7 @@ def checkEqual(str, a, b): # проверка корректности функ�
        print(str + ": " + f"{a} != {b}", file = sys.stderr)
 
 def test():
-    print("<имя> : <получено> != <ожидалось>")
+    print("<имя>: <получено> != <ожидалось>")
     sys.stdout.flush() # make sure the above line is printed before any test failure
     checkEqual("xor00", xor(0, 0), 0)
     checkEqual("xor10", xor(1, 0), 1)
@@ -411,38 +435,38 @@ def test():
     checkEqual("isPalindrome7", isPalindrome(201010101002), False)
     checkEqual("isPalindrome8", isPalindrome(200110101002), False)
 
-    checkEqual("gcd1", gcd(100, 10), 10)
-    checkEqual("gcd2", gcd(99, 11), 11)
-    checkEqual("gcd3", gcd(45, 25), 5)
-    checkEqual("gcd4", gcd(3, 11), 1)
-    checkEqual("gcd5", gcd(30, 42), 6)
+    # checkEqual("gcd1", gcd(100, 10), 10)
+    # checkEqual("gcd2", gcd(99, 11), 11)
+    # checkEqual("gcd3", gcd(45, 25), 5)
+    # checkEqual("gcd4", gcd(3, 11), 1)
+    # checkEqual("gcd5", gcd(30, 42), 6)
 
-    checkEqual("gcd6", gcd(-30, 42), -6)
-    checkEqual("gcd7", gcd(-30, -42), 6)
+    # checkEqual("gcd6", gcd(-30, 42), -6)
+    # checkEqual("gcd7", gcd(-30, -42), 6)
 
-    checkEqual("lcm1", lcm(5, 3), 15)
-    checkEqual("lcm2", lcm(3 * 5, 5 * 7), 3 * 5 * 7)
-    checkEqual("lcm3", lcm(2 * 3 * 5, 2 * 3 * 7), 2 * 3 * 5 * 7)
-    checkEqual("lcm4", lcm(2 ** 10, 2 ** 9), 2 ** 10)
+    # checkEqual("lcm1", lcm(5, 3), 15)
+    # checkEqual("lcm2", lcm(3 * 5, 5 * 7), 3 * 5 * 7)
+    # checkEqual("lcm3", lcm(2 * 3 * 5, 2 * 3 * 7), 2 * 3 * 5 * 7)
+    # checkEqual("lcm4", lcm(2 ** 10, 2 ** 9), 2 ** 10)
 
-    checkEqual("lcm5", lcm(-2, 3), -6)
+    # checkEqual("lcm5", lcm(-2, 3), -6)
 
-    checkEqual("sumRat1", sumRat(1, 4, 7, 8), (9, 8)) # 1/4 + 7/8 = 9/8
-    checkEqual("sumRat2", sumRat(2, 4, 4, 12), (5, 6)) # 2/4 + 4/12 = 5/6
-    checkEqual("sumRat3", sumRat(1, 1, 1, 1), (2, 1)) # 1/1 + 1/1 = 2/1
-    checkEqual("sumRat4", sumRat(0, 99, 4, 7), (4, 7)) # 0/99 + 4/7 = 4/7
+    # checkEqual("sumRat1", sumRat(1, 4, 7, 8), (9, 8)) # 1/4 + 7/8 = 9/8
+    # checkEqual("sumRat2", sumRat(2, 4, 4, 12), (5, 6)) # 2/4 + 4/12 = 5/6
+    # checkEqual("sumRat3", sumRat(1, 1, 1, 1), (2, 1)) # 1/1 + 1/1 = 2/1
+    # checkEqual("sumRat4", sumRat(0, 99, 4, 7), (4, 7)) # 0/99 + 4/7 = 4/7
 
-    checkEqual("sqrt1", sqrt(9), (True, 3))
-    checkEqual("sqrt2", sqrt(900 ** 2), (True, 900))
-    checkEqual("sqrt3", sqrt(1), (True, 1))
-    checkEqual("sqrt4", sqrt(0), (True, 0))
-    checkEqual("sqrt5", sqrt(8), (False, ()))
+    # checkEqual("sqrt1", sqrt(9), (True, 3))
+    # checkEqual("sqrt2", sqrt(900 ** 2), (True, 900))
+    # checkEqual("sqrt3", sqrt(1), (True, 1))
+    # checkEqual("sqrt4", sqrt(0), (True, 0))
+    # checkEqual("sqrt5", sqrt(8), (False, ()))
 
-    checkEqual("solveQuadEq", solveQuadEq(1, 2, 1), (True, (1, -1), (1, -1)))
-    checkEqual("solveQuadEq", solveQuadEq(1, 1, -6), (True, (3, -1), (2, 1)))
-    checkEqual("solveQuadEq", solveQuadEq(3, 3, -18), (True, (3, -1), (2, 1)))
-    checkEqual("solveQuadEq", solveQuadEq(1, 1, 1), (False, ()))
-    checkEqual("solveQuadEq", solveQuadEq(1, -1, 0), (False, ()))
+    # checkEqual("solveQuadEq", solveQuadEq(1, 2, 1), (True, (1, -1), (1, -1)))
+    # checkEqual("solveQuadEq", solveQuadEq(1, 1, -6), (True, (3, -1), (2, 1)))
+    # checkEqual("solveQuadEq", solveQuadEq(3, 3, -18), (True, (3, -1), (2, 1)))
+    # checkEqual("solveQuadEq", solveQuadEq(1, 1, 1), (False, ()))
+    # checkEqual("solveQuadEq", solveQuadEq(1, -1, 0), (False, ()))
 
     checkEqual("concat", concat(1 ** 2 ** nil, "1" ** "2" ** nil), 1 ** 2 ** "1" ** "2" ** nil)
     checkEqual("length", length(1 ** 3 ** 5 ** nil), 3)
@@ -472,5 +496,18 @@ def test():
     checkEqual("symmetricDifference", symmetricDifference(1 ** 2 ** 8 ** 3 ** nil, 1 ** 7 ** 2 ** 8 ** nil), 3 ** 7 ** nil)
     checkEqual("equalSets", equalSets(1 ** 2 ** 8 ** 3 ** nil, 2 ** 8 ** 1 ** 3 ** nil), True)
     checkEqual("equalSets", equalSets(1 ** 2 ** 8 ** 3 ** nil, 2 ** 8 ** 4 ** 3 ** nil), False)
-
+    checkEqual("Vec2 < Vec2", insertionSort(lambda x, y: x < y, Vec2(3, 4)
+                                                             ** Vec2(1, 0)
+                                                             ** Vec2(0, 1)
+                                                             ** Vec2(8, 15)
+                                                             ** Vec2(3, 6)
+                                                             ** Vec2(10, 0)
+                                                             ** nil),
+                                                                Vec2(0, 1)
+                                                             ** Vec2(1, 0)
+                                                             ** Vec2(3, 4)
+                                                             ** Vec2(3, 6)
+                                                             ** Vec2(10, 0)
+                                                             ** Vec2(8, 15)
+                                                             ** nil)
 test()
