@@ -30,23 +30,30 @@ def isLessThanStr(a, b):
           else:             # "b..." "b..."
              return isLessThanStr(a[1:], b[1:])
 
-# print("bgt" < "bgz")
-# print(isLessThanStr("bgt", "bgz"))
+# Делим строку на список из линий (отображаемых строк)
+def splitString(str, store = ''):
+  if str == '':
+     return nil
+  elif str[0] != '\n':
+     return splitString(str[1:], store + str[0])
+  else:
+     return store ** splitString(str[1:], '')
 
-# print("bgt" < "bg")
-# print(isLessThanStr("bgt", "bg"))
+# "Открываем" файл 'new.txt' в режиме чтения 'r'
+# Дальнейшие действия с файлом возможны через переменную `f`
+# Не забудь создать этот файл перед запуском
+inputFile = open('new.txt', 'r')
 
-# print("bbbbbgt" < "bbbbbgt")
-# print(isLessThanStr("bbbbbgt", "bbbbbgt"))
+# Считываем весь файл в виде одной строки
+lines = inputFile.read()
 
-print(insertionSort(isLessThanStr,
-           'masha'
-        ** 'peter4'
-        ** 'peter3'
-        ** 'peter2'
-        ** 'misha'
-        ** 'maria'
-        ** 'mark'
-        ** 'marat'
-        ** 'michael'
-        ** nil))
+# превращаем эту строку в список отображаемых строк
+linesList = splitString(lines)
+
+# TODO Homework отсортировать полученный список любым методом,
+# и записать его в какой либо другой файл
+# (для этого нужно открыть этот файл в режиме записи 'w') и использовать функцию его класса `write`
+# пример:
+
+#outputFile = open('output.txt', 'w')
+#outputFile.write(yourStringHere)

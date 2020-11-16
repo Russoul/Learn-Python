@@ -386,6 +386,17 @@ def quicksort(f, xs):
 
 print(quicksort(lambda x, y: x < y, 1 ** 7 ** 5 ** 1 ** 2 ** 4 ** 9 ** 6 ** nil))
 
+# Ввести список из строк из клавиатуры.
+def readList():
+  x = input()
+  if x == '':
+    return nil
+  else:
+    return int(x) ** readList()
+
+# print(insertionSort(lambda x, y: x < y, readList()))
+
+
 # -------------- ТЕСТЫ -----------------
 
 def checkEqual(str, a, b): # проверка корректности функций
