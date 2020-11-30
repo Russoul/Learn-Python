@@ -31,29 +31,77 @@ def isLessThanStr(a, b):
              return isLessThanStr(a[1:], b[1:])
 
 # Делим строку на список из линий (отображаемых строк)
-def splitString(str, store = ''):
+def splitString(delim, str, store = ''):
   if str == '':
-     return nil
-  elif str[0] != '\n':
-     return splitString(str[1:], store + str[0])
+     return store ** nil
+  elif str[0] != delim:
+     return splitString(delim, str[1:], store + str[0])
   else:
-     return store ** splitString(str[1:], '')
+     return store ** splitString(delim, str[1:], '')
 
-# "Открываем" файл 'new.txt' в режиме чтения 'r'
-# Дальнейшие действия с файлом возможны через переменную `f`
-# Не забудь создать этот файл перед запуском
-inputFile = open('new.txt', 'r')
+# Берет список строк и соединяет их в одну строку,
+# соединяя их символом '\n'
+def joinListOfStrs(xs):
+  if xs == nil:
+    return ''
+  else:
+    return xs.head + '\n' + joinListOfStrs(xs.tail)
+
+# Homework (1)
+def InitialiseA():
+    x = input()
+    v = splitString(' ', x)
+    print(v)
+    a = v[0].x
+    b = v[1].x
+    c = v[2].x
+    print(b[0] + ". " + c[0] + ". " + a)
+
+# Homework (2)
+def InitialiseB():
+  x = input()
+  v = splitString('/', x)
+  map(print, v)
+# InitialiseB()
+
+# ПРОЧИТАЙ МЕНЯ !
+# Чтобы дальнейший код работал, нужно создать два файла:
+# input.txt и output.txt в той же папке что и этот проект
+# В input.txt поместить любой текст
+
+# Говорим питону с каким файлом мы собираемся работать и
+# в каком режиме ('r' - чтение, 'w' - перезапись, 'a' - добавление (запись сверху), ...)
+inputFile = open('input.txt', 'r')
 
 # Считываем весь файл в виде одной строки
 lines = inputFile.read()
 
-# превращаем эту строку в список отображаемых строк
-linesList = splitString(lines)
+# Закрываем этот файл (более он нам не нужен в питоне)
+inputFile.close()
 
-# TODO Homework отсортировать полученный список любым методом,
-# и записать его в какой либо другой файл
-# (для этого нужно открыть этот файл в режиме записи 'w') и использовать функцию его класса `write`
-# пример:
+# Превращаем эту строку в список отображаемых строк
+linesList = init(splitString('\n', lines))
 
-#outputFile = open('output.txt', 'w')
-#outputFile.write(yourStringHere)
+# Сортируем
+sortedList = quicksort(isLessThanStr, linesList)
+
+# Открываем файл в который перезапишем отсортированный ввод
+outputFile = open('output.txt', 'w')
+
+# (Пере)записываем
+outputFile.write(joinListOfStrs(sortedList))
+
+# Закрываем файл
+outputFile.close()
+
+# ДЗ:
+# Поменять программу так, чтобы из одного файла считывался список (построчно)
+# чисел. Далее над этим списком производились следущие действия
+#  (каждое действие производится вне зависимости от остальльных над изначальным списком):
+# 1) считалась их сумма (сумма чисел)
+# 2) находился минимальный элемент списка, как число
+# 3) находился минимальный элемент списка, как строка:
+#    то есть нужно найти минимальную строку используя лексикографическое
+#    сравнение строк списка.
+
+# Результат каждой операции нужно записать во второй файл

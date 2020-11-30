@@ -70,6 +70,12 @@ def isEmpty(l):
 def nonEmpty(l):
     return not isEmpty(l)
 
+def init(xs):
+  if xs == nil:
+    return None
+  else:
+    return rev(rev(xs).tail)
+
 def map(f, l): # {x1, x2, x3, ..., xn} -> {f(x1), f(x2), f(x3), ..., f(xn)}
     if isEmpty(l):
        return nil

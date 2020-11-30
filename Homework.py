@@ -318,9 +318,12 @@ class Vec2:
            and self.x == other.x   \
            and self.y == other.y
 
+    def len(self):
+      return math.sqrt(self.x * self.x + self.y * self.y)
+
     # self < other <=> длина(self) < длина(other) (сравнивать вектора по их евклидовой длине)
     def __lt__(self, other):
-        pass # Homework
+      return self.len() < other.len()
 
 # Сложить два вектора
 def add(a, b):
@@ -382,9 +385,10 @@ def quicksort(f, xs):
     # отсортировать оба списка рекурсивно
     # вернуть их конкатенацию вставляя в нее `xs.head` в нужное место
     # Homework
-    pass
+    return concat(quicksort(f, filter(lambda x: f(x, xs.head), xs.tail)),
+       xs.head ** quicksort(f, filter(lambda x: not f(x, xs.head), xs.tail)))
 
-print(quicksort(lambda x, y: x < y, 1 ** 7 ** 5 ** 1 ** 2 ** 4 ** 9 ** 6 ** nil))
+# print(quicksort(lambda x, y: x < y, 1 ** 7 ** 5 ** 1 ** 2 ** 4 ** 9 ** 6 ** nil))
 
 # Ввести список из строк из клавиатуры.
 def readList():
@@ -398,13 +402,18 @@ def readList():
 
 
 # -------------- ТЕСТЫ -----------------
-
+numOfTests = 0
+numOfSuccessfulTests = 0
 def checkEqual(str, a, b): # проверка корректности функций
+    global numOfTests
+    global numOfSuccessfulTests
     if a != b:             # печатает ошибку если значения `a` и `b` не равны
-       print(str + ": " + f"{a} != {b}", file = sys.stderr)
+      print(str + ": " + f"{a} != {b}", file = sys.stderr)
+    else:
+      numOfSuccessfulTests += 1
+    numOfTests += 1
 
 def test():
-    print("<имя>: <получено> != <ожидалось>")
     sys.stdout.flush() # make sure the above line is printed before any test failure
     checkEqual("xor00", xor(0, 0), 0)
     checkEqual("xor10", xor(1, 0), 1)
@@ -521,4 +530,8 @@ def test():
                                                              ** Vec2(10, 0)
                                                              ** Vec2(8, 15)
                                                              ** nil)
+print("------------- TESTS --------------")
+print("<имя>: <получено> != <ожидалось>")
 test()
+print("Successful " + str(numOfSuccessfulTests) + " out of " + str(numOfTests))
+print("----------------------------------")
