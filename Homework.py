@@ -139,62 +139,69 @@ def fromTo(min, max): # составить список из целых чисе
     if min == max:    # от min (включительно) до max (исключая)
        return nil     # min, min + 1, min + 2, ... max - 1
     else:
-       return min ** fromTo(min + 1, max)
+       return List(min, fromTo(min + 1, max))
 
 def concat(xs, ys):   # сцепить два списка
     if xs == nil:     # concat(1 ** 2 ** nil, 3 ** 4 ** nil) = 1 ** 2 ** 3 ** 4 ** nil
        return ys
     else:
-       return xs.head ** concat(xs.tail, ys)
+       return List(xs.head, concat(xs.tail, ys))
 
 def filter(f, xs):    # составить новый список, в котором находятся все элементы x списка
     if xs == nil:     # xs, такие что f(x) = True
        return nil     # иными словами отфильтровать список xs через функцию f
     else:
        if f(xs.head):
-          return xs.head ** filter(f, xs.tail)
+          return List(xs.head, filter(f, xs.tail))
        else:
           return filter(f, xs.tail)
 
-def forAll(f, xs) -> bool:
+def forAll(f, xs):
     if xs == nil:     # для всех ли элементов x списка xs выполняется
        return True    # f(x) = True ?
     else:
        return f(xs.head) and forAll(f, xs.tail)
 
-def forSome(f, xs) -> bool:
+def forSome(f, xs):
     if xs == nil:     # Есть ли хотябы один элемент x списка xs
        return False   # такой что f(x) = True ?
     else:
        return f(xs.head) or forSome(f, xs.tail)
 
-def rev(xs) -> List:  # перевернуть список
+def rev(xs):          # перевернуть список
     if xs == nil:     # rev(True ** 22 ** "ok" ** nil) = "ok" ** 22 ** True ** nil
        return nil
     else:
-       return concat(rev(xs.tail), xs.head ** nil)
+       return concat(rev(xs.tail), List(xs.head, nil))
 
-def span(f, xs) -> (List, List):      # Разделить список xs на пару списков
-    if xs == nil:                     # Так что в первом списке пары находятся
-       return (nil, nil)              # все первые элементы x списка xs такие что
-    else:                             # f(x) = True
-       if f(xs.head):                 # а во втором все элементы после первого x
-          (l, r) = span(f, xs.tail)   # такого что f(x) = False
-          return (xs.head ** l, r)    # включая его самого
-       else:                          # Пример: span(lambda x: x % 2 == 0, 2 ** 4 ** 1 ** 6 ** 8 ** 10 ** nil)
-          return (nil, xs)            #           == (2 ** 4 ** nil, 1 ** 6 ** 8 ** 10 ** nil)
+def init(xs):
+  if xs == nil:
+    return None
+  else:
+    return rev(rev(xs).tail)
 
-def split(f, xs) -> (List, List):  # Разделить список xs на пару списков,
+
+def span(f, xs):                          # Разделить список xs на пару списков
+    if xs == nil:                         # Так что в первом списке пары находятся
+       return (nil, nil)                  # все первые элементы x списка xs такие что
+    else:                                 # f(x) = True
+       if f(xs.head):                     # а во втором все элементы после первого x
+          (l, r) = span(f, xs.tail)       # такого что f(x) = False
+          return (List(xs.head, l), r)    # включая его самого
+       else:                              # Пример: span(lambda x: x % 2 == 0, 2 ** 4 ** 1 ** 6 ** 8 ** 10 ** nil)
+          return (nil, xs)                #           == (2 ** 4 ** nil, 1 ** 6 ** 8 ** 10 ** nil)
+
+def split(f, xs):                  # Разделить список xs на пару списков,
     if xs == nil:                  # так что в первом из них хранятся элементы x из xs
        return (nil, nil)           # для которых f(x) = True,
     else:                          # а во втором элементы x для которых f(x) = False
        (left, right) = split(f, xs.tail)
        if f(xs.head):
-          return (xs.head ** left, right)
+          return (List(xs.head, left), right)
        else:
-          return (left, xs.head ** right)
+          return (left, List(xs.head, right))
 
-def elemOf(x, xs) -> bool:    # является ли x элементом xs
+def elemOf(x, xs):                 # является ли x элементом xs
     if xs == nil:
        return False
     else:
@@ -207,9 +214,9 @@ def dedupHelper(unique, xs):
        if elemOf(xs.head, unique):
           return dedupHelper(unique, xs.tail)
        else:
-          return dedupHelper(xs.head ** unique, xs.tail)
+          return dedupHelper(List(xs.head, unique), xs.tail)
 
-def dedup(xs) -> List:              # убрать все повторяющиеся элементы
+def dedup(xs):                      # убрать все повторяющиеся элементы
     return dedupHelper(nil, xs)     # xs, при этом сохранив последовательность элементов
                                     # пример: dedup(1 ** 3 ** 1 ** 3 ** 2 ** 1 ** nil)
                                     #           == 1 ** 3 ** 2 ** nil
@@ -335,7 +342,7 @@ def mult(v, k):
 
 # Создать список из двух элементов вектора v
 def toList(v):
-    return v.x ** v.y ** nil
+    return List(v.x, List(v.y, nil))
 
 # Если xs имеет длину 2, вернуть вектор из его элементов обернутый в just
 # Иначе вернуть nothing
@@ -350,18 +357,18 @@ def fromList(xs):
 # Порядок задается бинарной функцией f.
 def insertByOrder1(f, xs, x):
     if xs == nil:
-       return x ** nil
+       return List(x, nil)
     else:
        u = xs.head
        if f(u, x):
-          return u ** insertByOrder1(f, xs.tail, x)
+          return List(u, insertByOrder1(f, xs.tail, x))
        else:
-          return x ** xs
+          return List(x, xs)
 
 # Двухстрочный вариант через функцию span
 def insertByOrder2(f, xs, x):
     (left, right) = span(lambda u: f(u, x), xs)
-    return concat(left, x ** right)
+    return concat(left, List(x, right))
 
 # Вспомогательная функция
 def insertionSortHelper(f, xs, sorted):
@@ -386,9 +393,9 @@ def quicksort(f, xs):
     # вернуть их конкатенацию вставляя в нее `xs.head` в нужное место
     # Homework
     return concat(quicksort(f, filter(lambda x: f(x, xs.head), xs.tail)),
-       List(xs.head,quicksort(f, filter(lambda x: not f(x, xs.head), xs.tail))))
+       List(xs.head, quicksort(f, filter(lambda x: not f(x, xs.head), xs.tail))))
 
-# print(quicksort(lambda x, y: x < y, 1 ** 7 ** 5 ** 1 ** 2 ** 4 ** 9 ** 6 ** nil))
+# print(quicksort(lambda x, y: x < y, mkList(1, 7, 5, 1, 2, 4, 9, 6)))
 # x ** xs => List(x, xs)
 
 # Ввести список из строк из клавиатуры.
@@ -397,7 +404,7 @@ def readList():
   if x == '':
     return nil
   else:
-    return int(x) ** readList()
+    return List(int(x), readList())
 
 # print(insertionSort(lambda x, y: x < y, readList()))
 
@@ -489,48 +496,48 @@ def test():
     # checkEqual("solveQuadEq", solveQuadEq(1, 1, 1), (False, ()))
     # checkEqual("solveQuadEq", solveQuadEq(1, -1, 0), (False, ()))
 
-    checkEqual("concat", concat(1 ** 2 ** nil, "1" ** "2" ** nil), 1 ** 2 ** "1" ** "2" ** nil)
-    checkEqual("length", length(1 ** 3 ** 5 ** nil), 3)
-    checkEqual("fromTo", fromTo(1, 10), 1 ** 2 ** 3 ** 4 ** 5 ** 6 ** 7 ** 8 ** 9 ** nil)
+    checkEqual("concat", concat(mkList(1,  2), mkList("1",  "2")), mkList(1,  2,  "1", "2"))
+    checkEqual("length", length(mkList(1,  3,  5)), 3)
+    checkEqual("fromTo", fromTo(1, 10), mkList(1, 2, 3, 4, 5, 6, 7, 8, 9))
     checkEqual("fromTo", fromTo(1000, 1000), nil)
     checkEqual("filter", filter( lambda x: floor(math.sqrt(x)) * floor(math.sqrt(x)) == x
-                               , 1 ** 3 ** 4 ** 9 ** 10 ** nil), 1 ** 4 ** 9 ** nil)
+                               , mkList(1, 3, 4, 9, 10)), mkList(1, 4, 9))
     checkEqual("span", span(lambda x: len(x) == 3,
-                            "123" ** "xxx" ** "xx" ** "456" ** "yyy" ** nil),
-                      ("123" ** "xxx" ** nil, "xx" ** "456" ** "yyy" ** nil))
+                            mkList("123", "xxx", "xx", "456", "yyy")),
+                      (mkList("123", "xxx"), mkList("xx", "456", "yyy")))
     checkEqual("split", split( lambda x: x % 2 != 0
-                             , 1 ** 2 ** 3 ** 4 ** 5 ** nil), (1 ** 3 ** 5 ** nil, 2 ** 4 ** nil))
-    checkEqual("elemOf", elemOf(0, 1 ** 2 ** 3 ** 4 ** 5 ** nil), False)
-    checkEqual("elemOf", elemOf(4, 1 ** 2 ** 3 ** 4 ** 5 ** nil), True)
-    checkEqual("rev", rev(1 ** 2 ** 3 ** 4 ** 5 ** nil), 5 ** 4 ** 3 ** 2 ** 1 ** nil)
-    checkEqual("dedup", dedup(1 ** 1 ** 1 ** 1 ** nil), 1 ** nil)
-    checkEqual("dedup", dedup(1 ** 2 ** 1 ** 3 ** 2 ** 8 ** 1 ** nil), 1 ** 2 ** 3 ** 8 ** nil)
+                             , mkList(1, 2, 3, 4, 5)), (mkList(1, 3, 5), mkList(2, 4)))
+    checkEqual("elemOf", elemOf(0, mkList(1, 2, 3, 4, 5)), False)
+    checkEqual("elemOf", elemOf(4, mkList(1, 2, 3, 4, 5)), True)
+    checkEqual("rev", rev(mkList(1, 2, 3, 4, 5)), mkList(5, 4, 3, 2, 1))
+    checkEqual("dedup", dedup(mkList(1, 1, 1, 1)), mkList(1))
+    checkEqual("dedup", dedup(mkList(1, 2, 1, 3, 2, 8, 1)), mkList(1, 2, 3, 8))
 
-    checkEqual("intersection", intersection(1 ** 2 ** 5 ** 4 ** 8 ** nil, 2 ** 8 ** 1 ** nil), 1 ** 2 ** 8 ** nil)
-    checkEqual("intersection", intersection(1 ** 2 ** 5 ** 4 ** 8 ** nil, 7 ** 3 ** 10 ** nil), nil)
-    checkEqual("union", union(1 ** 2 ** 5 ** 4 ** 8 ** nil, 7 ** 5 ** 10 ** nil), 1 ** 2 ** 5 ** 4 ** 8 ** 7 ** 10 ** nil)
-    checkEqual("isSet", isSet(1 ** 2 ** 5 ** 4 ** 8 ** nil), True)
-    checkEqual("isSet", isSet(1 ** 2 ** 2 ** 4 ** 8 ** nil), False)
-    checkEqual("subsetOf", subsetOf(1 ** 2 ** 8 ** nil, 1 ** 7 ** 2 ** 8 ** nil), True)
-    checkEqual("subsetOf", subsetOf(1 ** 2 ** 8 ** 3 ** nil, 1 ** 7 ** 2 ** 8 ** nil), False)
-    checkEqual("difference", difference(1 ** 2 ** 8 ** 3 ** nil, 1 ** 7 ** 2 ** 8 ** nil), 3 ** nil)
-    checkEqual("symmetricDifference", symmetricDifference(1 ** 2 ** 8 ** 3 ** nil, 1 ** 7 ** 2 ** 8 ** nil), 3 ** 7 ** nil)
-    checkEqual("equalSets", equalSets(1 ** 2 ** 8 ** 3 ** nil, 2 ** 8 ** 1 ** 3 ** nil), True)
-    checkEqual("equalSets", equalSets(1 ** 2 ** 8 ** 3 ** nil, 2 ** 8 ** 4 ** 3 ** nil), False)
-    checkEqual("Vec2 < Vec2", insertionSort(lambda x, y: x < y, Vec2(3, 4)
-                                                             ** Vec2(1, 0)
-                                                             ** Vec2(0, 1)
-                                                             ** Vec2(8, 15)
-                                                             ** Vec2(3, 6)
-                                                             ** Vec2(10, 0)
-                                                             ** nil),
-                                                                Vec2(0, 1)
-                                                             ** Vec2(1, 0)
-                                                             ** Vec2(3, 4)
-                                                             ** Vec2(3, 6)
-                                                             ** Vec2(10, 0)
-                                                             ** Vec2(8, 15)
-                                                             ** nil)
+    checkEqual("intersection", intersection(mkList(1, 2, 5, 4, 8), mkList(2, 8, 1)), mkList(1, 2, 8))
+    checkEqual("intersection", intersection(mkList(1, 2, 5, 4, 8), mkList(7, 3, 10)), nil)
+    checkEqual("union", union(mkList(1, 2, 5, 4, 8), mkList(7, 5, 10)), mkList(1, 2, 5, 4, 8, 7, 10))
+    checkEqual("isSet", isSet(mkList(1, 2, 5, 4, 8)), True)
+    checkEqual("isSet", isSet(mkList(1, 2, 2, 4, 8)), False)
+    checkEqual("subsetOf", subsetOf(mkList(1, 2, 8), mkList(1, 7, 2, 8)), True)
+    checkEqual("subsetOf", subsetOf(mkList(1, 2, 8, 3), mkList(1, 7, 2, 8)), False)
+    checkEqual("difference", difference(mkList(1, 2, 8, 3), mkList(1, 7, 2, 8)), mkList(3))
+    checkEqual("symmetricDifference", symmetricDifference(mkList(1, 2, 8, 3), mkList(1, 7, 2, 8)), mkList(3, 7))
+    checkEqual("equalSets", equalSets(mkList(1, 2, 8, 3), mkList(2, 8, 1, 3)), True)
+    checkEqual("equalSets", equalSets(mkList(1, 2, 8, 3), mkList(2, 8, 4, 3)), False)
+    checkEqual("Vec2 < Vec2", insertionSort(lambda x, y: x < y, mkList(Vec2(3, 4)
+                                                                     , Vec2(1, 0)
+                                                                     , Vec2(0, 1)
+                                                                     , Vec2(8, 15)
+                                                                     , Vec2(3, 6)
+                                                                     , Vec2(10, 0)
+                                                            )),
+                                                                mkList(Vec2(0, 1)
+                                                                     , Vec2(1, 0)
+                                                                     , Vec2(3, 4)
+                                                                     , Vec2(3, 6)
+                                                                     , Vec2(10, 0)
+                                                                     , Vec2(8, 15)
+                                                            ))
 print("------------- TESTS --------------")
 print("<имя>: <получено> != <ожидалось>")
 test()

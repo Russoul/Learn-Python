@@ -1,11 +1,8 @@
 from Maybe import *
 
 class Nil:
-    def __rpow__(self, other):
-        return List(other, self)
-
-    def __radd__(self, other):
-        return List(other, self)
+    # def __rpow__(self, other):
+    #     return List(other, self)
 
     def __eq__(self, other):
         return type(other) == Nil
@@ -47,11 +44,8 @@ class List:
         self.head = x
         self.tail = xs
 
-    def __radd__(self, other):
-        return List(other, self)
-
-    def __rpow__(self, other): # other ** self => List(other, self)
-        return List(other, self)
+    # def __rpow__(self, other): # other ** self => List(other, self)
+    #     return List(other, self)
 
     def __str__(self):
         return showList(self)
@@ -68,11 +62,11 @@ def isEmpty(l):
 def nonEmpty(l):
     return not isEmpty(l)
 
-def init(xs):
-  if xs == nil:
-    return None
+def mkList(*xs):
+  if xs == ():
+    return nil
   else:
-    return rev(rev(xs).tail)
+    return List(xs[0], mkList(*xs[1:]))
 
 def map(f, l): # {x1, x2, x3, ..., xn} -> {f(x1), f(x2), f(x3), ..., f(xn)}
     if isEmpty(l):
@@ -80,4 +74,4 @@ def map(f, l): # {x1, x2, x3, ..., xn} -> {f(x1), f(x2), f(x3), ..., f(xn)}
     else:
        fx1 = f(l.head)
        t = map(f, l.tail) # f(x1) ** {f(x2), f(x3), ..., f(xn)}
-       return fx1 ** t
+       return List(fx1, t)

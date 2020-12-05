@@ -33,19 +33,19 @@ def isLessThanStr(a, b):
 # Делим строку на список из линий (отображаемых строк)
 def splitString(delim, str, store = ''):
   if str == '':
-     return store ** nil
+     return mkList(store)
   elif str[0] != delim:
      return splitString(delim, str[1:], store + str[0])
   else:
-     return store ** splitString(delim, str[1:], '')
+     return List(store, splitString(delim, str[1:], ''))
 
 # Берет список строк и соединяет их в одну строку,
-# соединяя их символом '\n'
-def joinListOfStrs(xs):
+# соединяя их символом `delim`
+def joinListOfStrs(delim, xs):
   if xs == nil:
     return ''
   else:
-    return xs.head + '\n' + joinListOfStrs(xs.tail)
+    return xs.head + delim + joinListOfStrs(delim, xs.tail)
 
 # Homework (1)
 def InitialiseA():
@@ -89,7 +89,7 @@ sortedList = quicksort(isLessThanStr, linesList)
 outputFile = open('output.txt', 'w')
 
 # (Пере)записываем
-outputFile.write(joinListOfStrs(sortedList))
+outputFile.write(joinListOfStrs('\n', sortedList))
 
 # Закрываем файл
 outputFile.close()
