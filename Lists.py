@@ -1,5 +1,3 @@
-from __future__ import annotations
-from typing import *
 from Maybe import *
 
 class Nil:
@@ -52,7 +50,7 @@ class List:
     def __radd__(self, other):
         return List(other, self)
 
-    def __rpow__(self, other):
+    def __rpow__(self, other): # other ** self => List(other, self)
         return List(other, self)
 
     def __str__(self):

@@ -386,9 +386,10 @@ def quicksort(f, xs):
     # вернуть их конкатенацию вставляя в нее `xs.head` в нужное место
     # Homework
     return concat(quicksort(f, filter(lambda x: f(x, xs.head), xs.tail)),
-       xs.head ** quicksort(f, filter(lambda x: not f(x, xs.head), xs.tail)))
+       List(xs.head,quicksort(f, filter(lambda x: not f(x, xs.head), xs.tail))))
 
 # print(quicksort(lambda x, y: x < y, 1 ** 7 ** 5 ** 1 ** 2 ** 4 ** 9 ** 6 ** nil))
+# x ** xs => List(x, xs)
 
 # Ввести список из строк из клавиатуры.
 def readList():
