@@ -39,6 +39,15 @@ def splitString(delim, str, store = ''):
   else:
      return List(store, splitString(delim, str[1:], ''))
 
+def deleteWhitespace(str):
+  if str == '':
+    return ''
+  else:
+    if str[0] == ' ':
+      return deleteWhitespace(str[1:])
+    else:
+      return str[0] + deleteWhitespace(str[1:])
+
 # Берет список строк и соединяет их в одну строку,
 # соединяя их символом `delim`
 def joinListOfStrs(delim, xs):
